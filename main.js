@@ -23,6 +23,16 @@ async function init() {
       ctx_set_fill_color: function (r, g, b) {
         ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
       },
+      ctx_save: function () {
+        ctx.save();
+      },
+      ctx_restore: function() {
+        ctx.restore();
+      },
+      ctx_rotate: function(angle) {
+        console.log(angle);
+        ctx.rotate(angle);
+      },
     }
   };
   wasmModule = await WebAssembly.instantiateStreaming(
@@ -39,8 +49,12 @@ async function init() {
     gamecanvas.width = minVal * 16;
     gamecanvas.height = minVal * 9;
     instance.exports.on_resize(gamecanvas.width, gamecanvas.height);
-  }
+  };
+  function onMouse(e) {
+    instance.exports.on_mouse(e.offsetX, e.offsetY);
+  };
   window.addEventListener("resize", onResize);
+  gamecanvas.addEventListener("mousemove", onMouse);
   onResize();
   instance.exports.init();
 };
